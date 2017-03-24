@@ -1,0 +1,149 @@
+REM note that we have to escape any percent signs with another percent sign
+git clone https://tylerevert.visualstudio.com/Git%%20Training/_git/GitTraining2 GitTraining2
+cd GitTraining2
+
+REM ==============================================================
+REM GIT BASICS
+REM ==============================================================
+
+REM Adding files
+echo hello>world.txt
+git status
+git add world.txt
+git status
+git commit -m "Adding world.txt"
+
+REM modifying files
+echo  Tyler>>world.txt
+git add world.txt
+git status
+git commit -m "Modifying world.txt"
+
+REM unstaging files
+echo !>>world.txt
+git add world.txt
+git reset world.txt
+git status
+
+REM removing files
+echo hello world>message.txt
+git add *.txt
+git commit -m "Saving changes"
+REM option 1 to remove a file: git rm (delete and stage)
+git rm world.txt
+REM option 2: manually del from file system, then git add
+del message.txt
+git add message.txt
+git status
+REM now let's unstage and restore the delete of world.txt
+git reset HEAD world.txt
+git checkout world.txt
+REM commit to get rid of message.txt
+git commit -m "Removing message.txt"
+
+REM undoing files changes
+echo hello>world.txt
+git status
+git checkout world.txt
+git status
+
+REM Undoing commits! This will rewind changes from the last FOUR commits into our "staged changes".
+git reset --soft HEAD~4
+git reset world.txt
+del world.txt
+REM and we're back where we started at the beginning of this file
+
+REM view what we've done!
+git log
+REM add "-p" for more details
+
+REM ==============================================================
+REM WORKING WITH REMOTES
+REM ==============================================================
+
+REM Pulling - fetch retrieves updates from the remote server, and merge applies the updates to your local clone
+git fetch
+git merge origin/master
+REM 'git pull' is just is a shortcut for the previous two
+git pull
+
+REM viewing branch tracking
+git remote -v show
+git branch -vv -a
+
+REM Pushing
+echo hello world!>message.txt
+git add message.txt
+git commit -m "Adding the message!"
+git push
+
+REM Conflicts
+REM All but the first person that tries to push the "adding message.txt" commit will get rejected!
+git pull
+git push
+
+REM check out the log - there are extra commits merging your change with your teammates
+REM these were automatic if you all used the same message.txt - if you didn't, you would've had to merge yourself
+git log
+
+REM Create branches to avoid excessive merging
+git branch newbranch
+git checkout newbranch
+git status
+REM You can combine the branch and checkout commands into one:
+git checkout -b supernewbranch
+REM The branch doesn't exist on the remote until you say so! Local-only branches can be useful for personal organization.
+git push --set-upstream origin supernewbranch
+
+REM Switch branches
+git status
+git checkout newbranch
+git status
+
+REM You can create branches in "folders" - really just normal branches with slashes in the name.
+REM check it out in a GUI though - most good ones will represent them as folders
+git branch folder/branch
+git branch folder/otherbranch
+
+REM Lets make a change and push it
+echo New message>message.txt
+git add message.txt
+git commit -m "New message!"
+git push
+REM our git push command needs to be a little different - we have to tell the remote to set up a new remote branch for us to track against
+git push --set-upstream origin newbranch
+REM if we make more changes we can just do git push like normal - this is only a first-time thing for new branches
+
+REM View branches
+git branch
+git branch -vv
+git branch -a -vv
+
+REM delete unwatned branches using -d/--delete
+git branch -d supernewbranch
+git branch -a -vv
+REM If you pushed the branch to the remote, you need to delete there as well. Be careful not to delete branches you haven't merged yet!
+git push origin -d supernewbranch
+git branch -a -vv
+
+REM Merging - lets get our change back into master! Start by switching to master...
+git checkout master
+git merge newbranch
+git status
+git push
+REM now it's safe to delete the branch if you want.
+
+REM So what happens when we have conflicts? 
+REM First, lets create one if we haven't one already
+echo Person1's message>message.txt
+git add message.txt
+git commit -m "Adding my personal message!"
+git push
+REM the first person has no problem - but others will create a conflict!
+git pull
+git status
+REM Let's resolve this guy....
+notepad.exe message.txt
+git add message.txt
+git commit -m "Merging message.txt"
+git push

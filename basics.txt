@@ -1,0 +1,34 @@
+REM <--- this is how comments work in Windows batch script files.
+
+REM cd or chdir to change directories
+cd Desktop
+chdir C:\
+
+REM use "." or ".." to refer to the current or parent directory, respectively
+cd ..
+cd .\Desktop
+
+REM use no arguments just to print your current location, if you get lost
+cd
+
+REM list the current directory contents
+dir
+
+REM add "/A" to see hidden and protected files too
+dir /A
+
+REM use "help" to get a quick reference sheet
+help dir
+
+REM clear off your terminal with cls
+cls
+
+REM echo just returns what you give it
+echo hello world
+
+REM this is especially useful when combined with "redirection operators": ">" and ">>"
+echo creates/overwrites a file! > NewOrOverwrittenFile.txt
+echo appends to a file! >> Appending.log
+
+REM paging output can be done with "more". Note the use of the "|" character to direct the output stream
+echo "Some command that spits out a whole bunch of stuff" | more
